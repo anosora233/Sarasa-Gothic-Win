@@ -85,8 +85,17 @@ const Ttc = phony(`ttc`, async t => {
 	await t.need(TtcFontFiles`TTC`, TtcFontFiles`TTC-Unhinted`);
 });
 
+const Ttcu = phony(`ttcu`, async t => {
+	await t.need(Ttfu);
+	await t.need(TtcFontFiles`TTC-Unhinted`);
+});
+
 const Ttf = phony(`ttf`, async t => {
 	await t.need(TtfFontFiles`TTF`, TtfFontFiles`TTF-Unhinted`);
+});
+
+const Ttfu = phony(`ttfu`, async t => {
+	await t.need(TtfFontFiles`TTF-Unhinted`);
 });
 
 const CheckTtfAutoHintExists = oracle("oracle:check-ttfautohint-exists", async target => {
