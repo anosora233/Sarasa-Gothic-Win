@@ -8,6 +8,8 @@ import { isIdeograph, isKorean } from "../helpers/unicode-kind.mjs";
 export default async function pass(argv) {
 	const font = await readFont(argv.main);
 
+	if (font.head.unitsPerEm !== 2048) CliProc.rebaseFont(font, 2048);
+
 	dropHints(font);
 	dropCharacters(font, c => isIdeograph(c) || isKorean(c));
 	dropFeature(font.gsub, ["dlig", "ljmo", "tjmo", "vjmo"]);

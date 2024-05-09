@@ -23,7 +23,10 @@ async function pass(argv) {
 	const ws = await readFont(argv.ws);
 	const feMisc = await readFont(argv.feMisc);
 
-	if (main.head.unitsPerEm !== 1000) CliProc.rebaseFont(main, 1000);
+	if (main.head.unitsPerEm !== 2048) CliProc.rebaseFont(main, 2048);
+	if (as.head.unitsPerEm !== 2048) CliProc.rebaseFont(as, 2048);
+	if (ws.head.unitsPerEm !== 2048) CliProc.rebaseFont(ws, 2048);
+	if (feMisc.head.unitsPerEm !== 2048) CliProc.rebaseFont(feMisc, 2048);
 
 	if (argv.latinCfg && argv.latinCfg.bakeFeatures) {
 		for (const feature of argv.latinCfg.bakeFeatures) {
