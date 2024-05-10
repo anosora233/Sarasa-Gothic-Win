@@ -377,7 +377,7 @@ const Pass1Hinted = file.make(
 			CheckTtfAutoHintExists,
 			de(out.dir)
 		);
-		await run("ttfautohint", pass1.full, out.full);
+		await run("ttfautohint", "-f", "latn", pass1.full, out.full);
 	}
 );
 
