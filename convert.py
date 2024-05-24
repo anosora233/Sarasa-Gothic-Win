@@ -28,6 +28,21 @@ def convert(main, temp):
         R for R in main["GSUB"].table.ScriptList.ScriptRecord if R.ScriptTag != "hani"
     ]  # Remove LangSys `hani` to avoid slow rendering
 
+    def calcu(tota, diff):
+        a, b, c, d = 1, 1, 1, -1
+        determinant = a * d - c * b
+        x = (tota * d - diff * b) / determinant
+        y = (a * diff - c * tota) / determinant
+        return int(x), int(y)
+
+    tota = main["OS/2"].sTypoAscender + main["OS/2"].sTypoDescender
+    diff = 2180
+    main["OS/2"].sTypoAscender, main["OS/2"].sTypoDescender = calcu(tota, diff)
+    main["OS/2"].fsSelection = temp["OS/2"].fsSelection
+
+    main["hhea"].ascent = temp["hhea"].ascent
+    main["hhea"].descent = temp["hhea"].descent
+
 
 for task in [
     Task(
