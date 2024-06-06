@@ -29,6 +29,18 @@ export function italize(font, degrees) {
 	}
 }
 
+export function tabularFigures(font, width) {
+	for (let u = 0x0030; u <= 0x0039; u++) {
+		const glyph = font.cmap.unicode.get(u);
+		const offset = (width - glyph.horizontal.end) / 2;
+
+		const contours = Ot.GeometryUtil.apply(Ot.GeometryUtil.Flattener, glyph.geometry);
+		for (const c of contours) for (const z of c) z.x += offset;
+		glyph.geometry = new Ot.Glyph.ContourSet(contours);
+		glyph.horizontal = { ...glyph.horizontal, end: width };
+	}
+}
+
 export function alterContours(glyph, fn) {
 	if (!glyph.geometry) return;
 	const contours = Ot.GeometryUtil.apply(Ot.GeometryUtil.Flattener, glyph.geometry);

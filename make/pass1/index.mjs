@@ -7,7 +7,7 @@ import { CliProc, Ot } from "ot-builder";
 import { bakeFeature } from "../helpers/bake-feature.mjs";
 import { dropCharacters, dropFeature } from "../helpers/drop.mjs";
 import { readFont, writeFont } from "../helpers/font-io.mjs";
-import { italize } from "../helpers/geometry.mjs";
+import { italize, tabularFigures } from "../helpers/geometry.mjs";
 import { isEnclosedAlphanumerics, isIdeograph, isKorean, isPua } from "../helpers/unicode-kind.mjs";
 
 import { setFontMetadata } from "./metadata.mjs";
@@ -47,7 +47,8 @@ async function pass(argv) {
 	if (!argv.mono) dropCharacters(main, c => isEnclosedAlphanumerics(c) || isPua(c));
 
 	// Bake tnum for UI
-	if (argv.tnum) bakeFeature("tnum", main, c => c != 0x2d);
+	// if (argv.tnum) bakeFeature("tnum", main, c => c != 0x2d);
+	if (argv.tnum) tabularFigures(main, { Bold: 1300, Regular: 1200, Light: 1100 }[argv.style]);
 
 	if (argv.italize) {
 		italize(as, +9.4);
