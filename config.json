@@ -4,7 +4,8 @@
 	"families": {
 		"Gothic": {
 			"isGothic": true,
-			"latinGroup": "Inter",
+			"baseGroup": "Jheng",
+			"latinGroup": "NotoSansDisplay",
 			"naming": {
 				"en_US": "Sarasa Gothic",
 				"zh_CN": "更纱黑体",
@@ -16,7 +17,8 @@
 		},
 		"Ui": {
 			"isPWID": true,
-			"latinGroup": "Inter",
+			"baseGroup": "JhengUI",
+			"latinGroup": "NotoSansDisplay",
 			"naming": {
 				"en_US": "Sarasa UI",
 				"zh_CN": "更纱黑体 UI",

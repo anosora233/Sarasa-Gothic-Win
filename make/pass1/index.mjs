@@ -19,11 +19,13 @@ const ENCODINGS = globalConfig.os2encodings;
 export default pass;
 async function pass(argv) {
 	const main = await readFont(argv.main);
+	const base = await readFont(argv.base);
 	const as = await readFont(argv.as);
 	const ws = await readFont(argv.ws);
 	const feMisc = await readFont(argv.feMisc);
 
 	if (main.head.unitsPerEm !== 2048) CliProc.rebaseFont(main, 2048);
+	if (base.head.unitsPerEm !== 2048) CliProc.rebaseFont(base, 2048);
 	if (as.head.unitsPerEm !== 2048) CliProc.rebaseFont(as, 2048);
 	if (ws.head.unitsPerEm !== 2048) CliProc.rebaseFont(ws, 2048);
 	if (feMisc.head.unitsPerEm !== 2048) CliProc.rebaseFont(feMisc, 2048);
@@ -41,7 +43,9 @@ async function pass(argv) {
 		dropFeature(main.gpos, argv.latinCfg.dropFeatures);
 	}
 
+	/* Keep original vhea
 	initVhea(main, as);
+	*/
 
 	// Drop enclosed alphanumerics and PUA
 	if (!argv.mono) dropCharacters(main, c => isEnclosedAlphanumerics(c) || isPua(c));
@@ -55,11 +59,13 @@ async function pass(argv) {
 		italize(feMisc, +9.4);
 	}
 
-	CliProc.mergeFonts(main, ws, Ot.ListGlyphStoreFactory);
-	CliProc.mergeFonts(main, as, Ot.ListGlyphStoreFactory, { preferOverride: true });
-	CliProc.mergeFonts(main, feMisc, Ot.ListGlyphStoreFactory);
+	CliProc.mergeFonts(base, main, Ot.ListGlyphStoreFactory, { preferOverride: true });
+	CliProc.mergeFonts(base, ws, Ot.ListGlyphStoreFactory, { preferOverride: true });
+	CliProc.mergeFonts(base, as, Ot.ListGlyphStoreFactory, { preferOverride: true });
+	CliProc.mergeFonts(base, feMisc, Ot.ListGlyphStoreFactory, { preferOverride: true });
 
-	dropCharacters(main, c => isIdeograph(c) || isKorean(c)); // Further filter out FE glyphs
+	dropCharacters(base, c => isIdeograph(c) || isKorean(c)); // Further filter out FE glyphs
+	/* Keep original metadata
 	setFontMetadata(
 		main,
 		!!argv.mono,
@@ -90,10 +96,11 @@ async function pass(argv) {
 			}
 		}
 	);
+	*/
 
-	CliProc.gcFont(main, Ot.ListGlyphStoreFactory);
+	CliProc.gcFont(base, Ot.ListGlyphStoreFactory);
 
-	await writeFont(argv.o, main);
+	await writeFont(argv.o, base);
 }
 
 function initVhea(main, as) {

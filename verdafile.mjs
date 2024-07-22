@@ -333,6 +333,17 @@ const LatinSource = file.make(
 	}
 );
 
+const BaseSource = file.make(
+	(group, style) => `${BUILD}/base-${group}/${group}-${style}.ttf`,
+	async (t, out, group, style) => {
+		const [config] = await t.need(Config, Scripts, de(out.dir));
+		const sourceFile = `sources/${group}/${group}-${style}.ttf`;
+		const [source] = await t.need(fu(sourceFile));
+		await t.need(CheckTtfAutoHintExists);
+		await run("ttfautohint", "-d", source.full, out.full);
+	}
+);
+
 const Pass1 = file.make(
 	(family, region, style) => `${BUILD}/pass1/${family}-${region}-${style}.ttf`,
 	async (t, out, family, region, style) => {
@@ -340,6 +351,7 @@ const Pass1 = file.make(
 		const version = await t.need(Version);
 
 		const latinFamily = config.families[family].latinGroup;
+		const baseFamily = config.families[family].baseGroup;
 		const latinCfg = config.latinGroups[latinFamily] || {};
 		const [, $1, $2, $3, $4] = await t.need(
 			de(out.dir),
@@ -348,11 +360,13 @@ const Pass1 = file.make(
 			WS0(family, region, deItalizedNameOf(config, style)),
 			FEMisc0(family, region, deItalizedNameOf(config, style))
 		);
+		const [base] = await t.need(BaseSource(baseFamily, style));
 		await RunFontBuildTask("make/pass1/index.mjs", {
 			main: $1.full,
 			as: $2.full,
 			ws: $3.full,
 			feMisc: $4.full,
+			base: base.full,
 			o: out.full,
 
 			family: family,
