@@ -104,6 +104,8 @@
 		"styleMap": {
 			"SemiBold": "Medium"
 		},
+		"scRegion": "SC",
+		"scOverride": "OPlus",
 		"classicalRegion": "CL",
 		"classicalOverridePrefix": "ShangguSansTC",
 		"classicalOverrideSuffixMap": {

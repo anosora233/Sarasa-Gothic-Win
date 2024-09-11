@@ -14,8 +14,10 @@ export default (async function pass(argv) {
 	dropOtl(font);
 	dropCharacters(font, c => !isIdeograph(c));
 
-	if (argv.classicalOverride) {
-		const override = await readFont(argv.classicalOverride);
+	for (const path of [argv.classicalOverride, argv.scOverride]) {
+		if (!path) continue;
+		const override = await readFont(path);
+		if (override.head.unitsPerEm !== 2048) CliProc.rebaseFont(override, 2048);
 		dropCharacters(override, c => !isIdeograph(c));
 		CliProc.mergeFonts(font, override, Ot.ListGlyphStoreFactory, { preferOverride: true });
 	}

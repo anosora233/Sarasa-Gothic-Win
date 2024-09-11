@@ -245,8 +245,13 @@ const Kanji0 = file.make(
 		if (region === config.shsSourceMap.classicalRegion) {
 			[$2] = await t.need(ShsCassicalOverrideTtf(style));
 		}
+		let $3 = null;
+		if (region === config.shsSourceMap.scRegion) {
+			[$3] = await t.need(BaseSource(config.shsSourceMap.scOverride, style));
+		}
 		await RunFontBuildTask("make/kanji/build.mjs", {
 			main: $1.full,
+			scOverride: $3 ? $3.full : null,
 			classicalOverride: $2 ? $2.full : null,
 			o: out.full
 		});
