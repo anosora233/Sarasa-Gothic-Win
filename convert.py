@@ -18,8 +18,10 @@ def convert(main, temp):
         main["OS/2"].usWeightClass = 290
 
     main["GSUB"].table.ScriptList.ScriptRecord = [
-        R for R in main["GSUB"].table.ScriptList.ScriptRecord if R.ScriptTag != "hani"
-    ]  # Remove LangSys `hani` to avoid slow rendering
+        r
+        for r in main["GSUB"].table.ScriptList.ScriptRecord
+        if r.ScriptTag in ["grek", "cyrl", "latn", "DFLT"]
+    ]  # Simplify GSUB
 
 
 msyh = Path("./.msyh")
